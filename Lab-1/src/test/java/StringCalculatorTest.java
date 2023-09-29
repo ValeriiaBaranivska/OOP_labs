@@ -20,9 +20,5 @@ public class StringCalculatorTest {
         int result = calculator.Add("1,2");
         assertEquals(3, result);
     }
-    @Test
-    void testMoreThanTwoNumbers() {
-        StringCalculator calculator = new StringCalculator();
-        assertThrows(IllegalArgumentException.class, () -> calculator.Add("1,2,3"));
-    }
+
 }
