@@ -21,4 +21,5 @@ public class StringCalculatorTest {
         assertEquals(3, result);
     }
 
+
 }
