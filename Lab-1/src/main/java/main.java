@@ -5,8 +5,10 @@ public class main {
         System.out.println("\t Valeriia Baranivska KM-23\n");
         System.out.println("1. Enter numbers by comma(any length)");
         System.out.println("2. Enter numbers by \\n ");
-        System.out.println("3. Pattern to enter //[delimeter]\\n[numbers]");
+        System.out.println("3. Pattern to enter //[delimiter]\\n[numbers]");
         System.out.println("4. Negative numbers are not allowed!");
+        System.out.println("5. Numbers more than 1000 ignored");
+        System.out.println("6. Pattern to enter //[delimiter]\\n (delimiter could be any length) ");
         StringCalculator calculator = new StringCalculator();
         Scanner myObj = new Scanner(System.in);
         while(true){

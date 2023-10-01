@@ -19,7 +19,7 @@ public class StringCalculator {
             }
         }
 
-        numberArray = numbersWithoutDelimiter.split("[" + delimiter + ",\\n]");
+        numberArray = numbersWithoutDelimiter.split("[" + delimiter + ",\\n]+");
 
         boolean hasInvalidCharacters = false; // Track if there are invalid characters
         for (String num : numberArray) {
