@@ -36,14 +36,14 @@ public class StringCalculator {
             System.out.println("Input contains invalid characters!");
             return 0;
         }
+
         int sum = 0;
         List<Integer> negativeNum = new ArrayList<>();
         for (String num : numberArray) {
             int intValue = Integer.parseInt(num);
             if (intValue < 0) {
-
                 negativeNum.add(intValue);
-            } else {
+            } else if(intValue < 1001){
                 sum += intValue; // Sum all valid numbers
             }
         }
