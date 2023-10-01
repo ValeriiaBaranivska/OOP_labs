@@ -5,6 +5,7 @@ public class main {
         System.out.println("\t Valeriia Baranivska KM-23\n");
         System.out.println("1. Enter numbers by comma(any length)");
         System.out.println("2. Enter numbers by \\n ");
+        System.out.println("3. Pattern to enter //[delimeter]\\n[numbers]");
         StringCalculator calculator = new StringCalculator();
         Scanner myObj = new Scanner(System.in);
         while(true){
