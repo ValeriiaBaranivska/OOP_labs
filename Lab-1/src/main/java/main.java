@@ -8,8 +8,9 @@ public class main {
         System.out.println("3. Pattern to enter //[delimiter]\\n[numbers]");
         System.out.println("4. Negative numbers are not allowed!");
         System.out.println("5. Numbers more than 1000 ignored");
-        System.out.println("6. Pattern to enter //[delimiter]\\n (delimiter could be any length) ");
+        System.out.println("6. Pattern to enter //[delimiter]\\n (delimiter could be of any length) ");
         System.out.println("7. Enter some delimiters ");
+        System.out.println("8. Check the input of multiple delimiters of any length ");
         StringCalculator calculator = new StringCalculator();
         Scanner myObj = new Scanner(System.in);
         while(true){
