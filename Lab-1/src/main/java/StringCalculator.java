@@ -1,4 +1,6 @@
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class StringCalculator {
     public static int Add(String numbers) {
@@ -34,11 +36,22 @@ public class StringCalculator {
             System.out.println("Input contains invalid characters!");
             return 0;
         }
-
         int sum = 0;
+        List<Integer> negativeNum = new ArrayList<>();
         for (String num : numberArray) {
-            sum += Integer.parseInt(num); // Sum all valid numbers
+            int intValue = Integer.parseInt(num);
+            if (intValue < 0) {
+
+                negativeNum.add(intValue);
+            } else {
+                sum += intValue; // Sum all valid numbers
+            }
         }
-        return sum;
+        if (!negativeNum.isEmpty()) {
+            System.out.println("Negative numbers are not allowed: " + negativeNum);
+            return 0;
+        }else {
+            return sum;
+        }
     }
 }
