@@ -1,9 +1,9 @@
 package org.example;
-import java.util.Random;
-import java.util.Arrays;
 
-import java.util.Objects;
-public class Matrix {
+import java.util.Arrays;
+import java.util.Random;
+
+public class Matrix implements matrixInterface{
     private int rows;
     private int columns;
     private double[][] data;
@@ -30,6 +30,16 @@ public class Matrix {
             this.data[i] = Arrays.copyOf(otherMatrix.data[i], this.columns);
         }
     }
+    public Matrix(Immutable immutableMatrix) {
+        this.rows = immutableMatrix.getNumRows();
+        this.columns = immutableMatrix.getNumColumns();
+        this.data = new double[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(immutableMatrix.getData()[i], 0, this.data[i], 0, columns);
+        }
+    }
+
+    @Override
     public void fillMatrix(double[][] values) {
         if (values.length == this.rows && values[0].length == this.columns) {
             for (int i = 0; i < this.rows; ++i) {
@@ -37,11 +47,18 @@ public class Matrix {
                     this.data[i][j] = values[i][j];
                 }
             }
-
         } else {
             throw new IllegalArgumentException("The provided values array doesn't match the matrix dimensions.");
         }
     }
+
+    @Override
+    public void fillMatrix() {
+
+    }
+
+
+    @Override
     public void printMatrix() {
         for (int i = 0; i < this.rows; ++i) {
             for (int j = 0; j < this.columns; ++j) {
@@ -51,27 +68,42 @@ public class Matrix {
         }
         System.out.println("\n");
     }
+    @Override
+    public int[] dimension() {
+        int[] d = {rows, columns};
+        System.out.printf("Rows: %d \nColumns: %d\n", rows, columns);
+        return d;
+    }
+    @Override
     public int getNumRows() {
         return rows;
     }
+    @Override
+    public double[][] getData() {
+        return data;
+    }
+    @Override
     public int getNumColumns() {
         return columns;
     }
-    // Getter для елементу
+
+    @Override // Getter для елементу
     public double getElement(int row, int column) {
         if (row < 0 || row >= rows || column < 0 || column >= columns) {
             throw new IllegalArgumentException("Invalid row or column index");
         }
         return data[row][column];
     }
-    // Getter для рядка
+
+    @Override // Getter для рядка
     public double[] getRow(int rowIndex) {
         if (rowIndex < 0 || rowIndex >= rows) {
             throw new IllegalArgumentException("Invalid row index");
         }
-        return Arrays.copyOf(data[rowIndex], columns);
+        return data[rowIndex];
     }
-    // Getter для стовпця
+
+    @Override// Getter для стовпця
     public double[] getColumn(int columnIndex) {
         if (columnIndex < 0 || columnIndex >= columns) {
             throw new IllegalArgumentException("Invalid column index");
@@ -82,6 +114,7 @@ public class Matrix {
         }
         return columnData;
     }
+
     // Setter для елементу
     public void setElement(int row, int column, double value) {
         if (row < 0 || row >= rows || column < 0 || column >= columns) {
@@ -89,6 +122,7 @@ public class Matrix {
         }
         data[row][column] = value;
     }
+
     // Setter для рядка
     public void setRow(int rowIndex, double[] values) {
         if (rowIndex < 0 || rowIndex >= rows || values.length != columns) {
@@ -96,6 +130,7 @@ public class Matrix {
         }
         System.arraycopy(values, 0, data[rowIndex], 0, columns);
     }
+
     // Setter для стовпця
     public void setColumn(int columnIndex, double[] values) {
         if (columnIndex < 0 || columnIndex >= columns || values.length != rows) {
@@ -113,19 +148,22 @@ public class Matrix {
             }
         }
     }
-    public static Matrix createRandomMatrix(int rows, int columns) {
+    public static Matrix RandomMatrix(int rows, int columns, double min, double max) {
         Random random = new Random();
-        Matrix randomMatrix = new Matrix(rows, columns);
+        Matrix r = new Matrix(rows, columns);
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                randomMatrix.setElement(i, j, random.nextDouble());
+                double randomValue = min + (max - min) * random.nextDouble();
+                r.setElement(i, j, randomValue);
             }
         }
 
-        return randomMatrix;
+        return r;
     }
-    public static Matrix multiply(Matrix matrixA, Matrix matrixB) {
+
+    @Override //множення матриць
+    public Matrix multiply(Matrix matrixA, Matrix matrixB) {
         double[][] matrixAData = matrixA.getData();
         double[][] matrixBData = matrixB.getData();
 
@@ -148,9 +186,10 @@ public class Matrix {
         }
         return resultMatrix;
     }
-    private double[][] getData() {
-        return data;
-    }
+
+
+
+    //множення на скаляр
     public static Matrix scalar(Matrix matrix, double num) {
         double[][] matrixData = matrix.getData();
         int rows = matrix.getNumRows();
@@ -163,25 +202,31 @@ public class Matrix {
         }
         return resultMatrix;
     }
-    public static Matrix add(Matrix matrixA, Matrix matrixB) {
-        double[][] matrixAData = matrixA.getData();
+
+    @Override
+    public Matrix add(Matrix matrixB) {
+        double[][] matrixAData = this.getData();
         double[][] matrixBData = matrixB.getData();
-        int rowsA = matrixA.getNumRows();
-        int columnsA = matrixA.getNumColumns();
+        int rowsA = this.getNumRows();
+        int columnsA = this.getNumColumns();
         int rowsB = matrixB.getNumRows();
         int columnsB = matrixB.getNumColumns();
-        if ((rowsB != rowsA) & (columnsB != columnsA)) {
-            System.err.println("These matrices cannot be multiplied.");
+
+        if (rowsB != rowsA || columnsB != columnsA) {
+            System.err.println("Matrices must have the same dimensions for addition.");
             return null;
         }
+
         Matrix resultMatrix = new Matrix(rowsA, columnsA);
         for (int i = 0; i < rowsA; i++) {
             for (int j = 0; j < columnsA; j++) {
-                resultMatrix.setElement(i, j, resultMatrix.getElement(i, j) + matrixAData[i][j] + matrixBData[i][j]);
+                resultMatrix.setElement(i, j, matrixAData[i][j] + matrixBData[i][j]);
             }
         }
+
         return resultMatrix;
     }
+    //одинична матриця
     public static Matrix UnitMatrix(int row,int column) {
         Matrix resultMatrix = new Matrix(row, column);
         for (int i = 0; i < row; i++) {
@@ -194,6 +239,7 @@ public class Matrix {
         }
         return resultMatrix;
     }
+    //векторна матриця
     public static Matrix VectorMatrix(Matrix matrix,double[] vec) {
         int lenVec = vec.length;
         Matrix resultMatrix = new Matrix(lenVec, lenVec);
@@ -202,7 +248,9 @@ public class Matrix {
         }
         return resultMatrix;
     }
-    public static Matrix transposed(Matrix matrix) {
+
+    @Override
+    public  Matrix transposed(Matrix matrix) {
         int row = matrix.getNumRows();
         int column = matrix.getNumColumns();
         Matrix resultMatrix = new Matrix(column, row);
@@ -218,10 +266,50 @@ public class Matrix {
         Matrix otherMatrix = (Matrix) obj;
         return Arrays.deepEquals(this.data, otherMatrix.data);
     }
-
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(data);
     }
 
+    public static Matrix invert(Matrix matrix) {
+        int rows = matrix.getNumRows();
+        int columns = matrix.getNumColumns();
+
+        // Create an augmented matrix [matrix | I]
+        double[][] augmentedMatrix = new double[rows][2 * columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                augmentedMatrix[i][j] = matrix.getData()[i][j];
+                augmentedMatrix[i][j + columns] = (i == j) ? 1 : 0;
+            }
+        }
+        // Apply Gauss-Jordan elimination
+        for (int i = 0; i < rows; i++) {
+            // Make the diagonal element 1
+            double pivot = augmentedMatrix[i][i];
+            for (int j = 0; j < 2 * columns; j++) {
+                augmentedMatrix[i][j] /= pivot;
+            }
+            // Make other rows 0
+            for (int k = 0; k < rows; k++) {
+                if (k != i) {
+                    double factor = augmentedMatrix[k][i];
+                    for (int j = 0; j < 2 * columns; j++) {
+                        augmentedMatrix[k][j] -= factor * augmentedMatrix[i][j];
+                    }
+                }
+            }
+        }
+        // Extract the inverse matrix from the augmented matrix
+        Matrix inverse = new Matrix(rows, columns);
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(augmentedMatrix[i], columns, inverse.getData()[i], 0, columns);
+        }
+        return inverse;
+    }
+    // Method to find the inverse matrix
+
 }
+
+
+
